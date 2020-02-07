@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Person liste</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 5px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px;
+            background: #ececec;
+        }
+
+        article {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="data_con"></section>
+    <template>
+        <article id="personer">
+            <h2></h2>
+            <img src="" alt="">
+            <p class="efternavn"></p>
+            <p class="hobby"></p>
+            <p class="kaeledyr"></p>
+
+        </article>
+    </template>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", start);
+
+        let personer = [];
+        const endPoint = ("https://spreadsheets.google.com/feeds/list/1XWWbfWszD7f4jHqp51V_oT3pkHuR-ceEUw4YtrvK7F0/od6/public/values?alt=json");
+
+        function start() {
+            loadData();
+        }
+
+        async function loadData() {
+            const response = await fetch(endPoint);
+            personer = await response.json();
+            console.log(response);
+
+            visPersoner();
+        }
+
+        function visPersoner() {
+            const data_con = document.querySelector(".data_con");
+            const personTemplate = document.querySelector("template");
+
+            personer.feed.entry.forEach(person => {
+                let klon = personTemplate.cloneNode(true).content;
+
+                klon.querySelector("h2").textContent = `Navn: ${person.gsx$navn.$t}`;
+                klon.querySelector(".efternavn").textContent = `Efternavn: ${person.gsx$efternavn.$t}`;
+                klon.querySelector(".hobby").textContent = `Hobby: ${person.gsx$hobby.$t}`;
+                klon.querySelector(".kaeledyr").textContent = `Kaeledyr: ${person.gsx$hobby.$t}`;
+                klon.querySelector("img").src = `${person.gsx$billede.$t}`;
+                data_con.appendChild(klon);
+            })
+
+        }
+    </script>
+</body></html>
